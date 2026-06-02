@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Basur.İzle - Video Platformu</title>
+
+<style>
+body{
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:#121212;
+    color: #fff;
+}
+header{
+    background:#1f1f1f;
+    color:white;
+    padding:15px;
+    display:flex;
+    gap:15px;
+    align-items:center;
+    border-bottom: 2px solid #ff4757;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    color: #ff4757;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+#search{
+    flex:1;
+    padding:10px;
+    border:1px solid #333;
+    border-radius:5px;
+    background: #2f2f2f;
+    color: #fff;
+}
+#search:focus {
+    outline: 1px solid #ff4757;
+}
+.container{
+    width:95%;
+    max-width: 1200px;
+    margin:auto;
+    padding:20px;
+}
+.upload{
+    background:#1f1f1f;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:30px;
+    border: 1px solid #2f2f2f;
+}
+.upload h2 {
+    margin-top: 0;
+    color: #ff4757;
+}
+.upload input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    background: #2f2f2f;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.upload input[type="file"] {
+    margin-top: 10px;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:25px;
+}
+.card{
+    background:#1f1f1f;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.5);
+    border: 1px solid #2f2f2f;
+    display: flex;
+    flex-direction: column;
+}
+.card video{
+    width:100%;
+    aspect-ratio: 16/9;
+    background:black;
+}
+.info{
+    padding:15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.info h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+.stats {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+button{
+    cursor:pointer;
+    padding:8px 12px;
+    border: none;
+    border-radius: 5px;
+    background: #ff4757;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+button:hover {
+    background: #ff6b81;
+}
+button:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+.likeBtn {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.comment-section {
+    margin-top: auto;
+}
+.comment-input-container {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+.comment{
+    flex: 1;
+    padding:8px;
+    background: #2f2f2f;
+    border: 1px solid #333;
+    color: white;
+    border-radius:5px;
+}
+.comments{
+    max-height: 100px;
+    overflow-y:auto;
+    margin-top: 10px;
+    background: #151515;
+    border-radius: 5px;
+    padding: 5px;
+}
+.comments p{
+    background:#2f2f2f;
+    padding:8px;
+    border-radius:5px;
+    margin: 5px 0;
+    font-size: 13px;
+    word-break: break-all;
+}
+hr {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 15px 0;
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">📺 Basur.İzle</div>
+<input id="search" placeholder="Video veya başlık ara...">
+</header>
+
+<div class="container">
+
+<div class="upload">
+<h2>Yeni Video Paylaş</h2>
+<input type="text" id="title" placeholder="Video başlığı girin...">
+<br><br>
+<input type="file" id="videoFile" accept="video/*">
+<br><br>
+<button onclick="uploadVideo()">Videoyu Sunucuya Yükle</button>
+</div>
+
+<div class="grid" id="videos"></div>
+
+</div>
+
+<script>
+const videosDiv = document.getElementById("videos");
+// Hafızadaki videoları çek, yoksa boş dizi oluştur
+let savedVideos = JSON.parse(localStorage.getItem("basur_videos")) || [];
+
+// Sayfa ilk açıldığında kayıtlı videoları ekrana bas
+window.onload = function() {
+    // Tersten döngü kuruyoruz ki en son yüklenen en üstte görünsün
+    for(let i = savedVideos.length - 1; i >= 0; i--) {
+        createVideoCard(savedVideos[i], i);
+    }
+};
+
+function uploadVideo(){
+    const title = document.getElementById("title").value.trim();
+    const file = document.getElementById("videoFile").files[0];
+
+    if(!title || !file){
+        alert("Lütfen bir başlık yazın ve video dosyası seçin.");
+        return;
+    }
+
+    // Büyük boyutlu videolar yerel hafıza sınırını (5-10MB) aşabilir uyarısı
+    if (file.size > 25 * 1024 * 1024) {
+        alert("Video boyutu çok büyük! Tarayıcı hafızası için lütfen 25MB altı bir video seçin.");
+        return;
+    }
+
+    const reader = new FileReader();
+    
+    // Videoyu kalıcı veri tabanına yazmak için Base64'e çeviriyoruz
+    reader.onload = function(e) {
+        const videoData = {
+            id: Date.now(),
+            title: title,
+            src: e.target.result, // Kalıcı veri formatı
+            views: 0,
+            likes: 0,
+            comments: []
+        };
+
+        savedVideos.push(videoData);
+        localStorage.setItem("basur_videos", JSON.stringify(savedVideos));
+        
+        // Ekrana kartı ekle (Index numarası dizinin son elemanıdır)
+        createVideoCard(videoData, savedVideos.length - 1);
+        
+        // Formu temizle
+        document.getElementById("title").value = "";
+        document.getElementById("videoFile").value = "";
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function createVideoCard(videoData, index) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.index = index;
+
+    card.innerHTML = `
+        <video controls preload="metadata" playsinline>
+            <source src="${videoData.src}">
+            Tarayıcınız bu videoyu desteklemiyor.
+        </video>
+
+        <div class="info">
+            <h3>${videoData.title}</h3>
+            <div class="stats">
+                👁️ <span class="view">${videoData.views}</span> izlenme
+                | 
+                👍 <span class="likes">${videoData.likes}</span> beğeni
+            </div>
+
+            <button class="likeBtn">👍 Beğen</button>
+            <hr>
+
+            <div class="comment-section">
+                <div class="comments"></div>
+                <div class="comment-input-container">
+                    <input class="comment" placeholder="Yorum ekle...">
+                    <button class="sendBtn">Gönder</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Eski yorumları karta yükle
+    const commentsDiv = card.querySelector(".comments");
+    videoData.comments.forEach(text => {
+        const p = document.createElement("p");
+        p.textContent = text;
+        commentsDiv.appendChild(p);
+    });
+
+    videosDiv.appendChild(card);
+
+    // İzlenme Olayı
+    const video = card.querySelector("video");
+    let viewed = false;
+    video.addEventListener("play", () => {
+        if (!viewed) {
+            videoData.views += 1;
+            card.querySelector(".view").textContent = videoData.views;
+            updateLocalStorage();
+            viewed = true;
+        }
+    });
+
+    // Beğenme Olayı
+    const likeBtn = card.querySelector(".likeBtn");
+    likeBtn.addEventListener("click", () => {
+        videoData.likes += 1;
+        card.querySelector(".likes").textContent = videoData.likes;
+        likeBtn.innerText = "✅ Beğenildi";
+        likeBtn.disabled = true;
+        updateLocalStorage();
+    });
+
+    // Yorum Yapma Olayı
+    const commentInput = card.querySelector(".comment");
+    card.querySelector(".sendBtn").addEventListener("click", () => {
+        const text = commentInput.value.trim();
+        if (text === "") return;
+
+        videoData.comments.push(text);
+        
+        const p = document.createElement("p");
+        p.textContent = text;
+        commentsDiv.appendChild(p);
+        
+        commentInput.value = "";
+        updateLocalStorage();
+        commentsDiv.scrollTop = commentsDiv.scrollHeight; // Son yoruma odaklan
+    });
+}
+
+function updateLocalStorage() {
+    localStorage.setItem("basur_videos", JSON.stringify(savedVideos));
+}
+
+// Arama Filtresi
+document.getElementById("search").addEventListener("input", function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll(".card").forEach(card => {
+        const title = card.querySelector("h3").textContent.toLowerCase();
+        card.style.display = title.includes(q) ? "flex" : "none";
+    });
+});
+</script>
+
+</body>
+</html>
