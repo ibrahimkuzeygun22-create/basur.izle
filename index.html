@@ -4,338 +4,854 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Basur.İzle - Video Platformu</title>
-
 <style>
-body{
-    margin:0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background:#121212;
-    color: #fff;
+:root {
+    --bg-color: #121212;
+    --panel-bg: #1f1f1f;
+    --text-color: #ffffff;
+    --text-sub: #aaaaaa;
+    --border-color: #2f2f2f;
+    --primary-color: #ff4757;
+    --primary-hover: #ff6b81;
+    --input-bg: #2f2f2f;
 }
-header{
-    background:#1f1f1f;
-    color:white;
-    padding:15px;
-    display:flex;
-    gap:15px;
-    align-items:center;
-    border-bottom: 2px solid #ff4757;
+.light-mode {
+    --bg-color: #f9f9f9;
+    --panel-bg: #ffffff;
+    --text-color: #111111;
+    --text-sub: #606060;
+    --border-color: #e5e5e5;
+    --primary-color: #ff4757;
+    --primary-hover: #ff6b81;
+    --input-bg: #f1f1f1;
+}
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+}
+header {
+    background: var(--panel-bg);
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
     position: sticky;
     top: 0;
     z-index: 1000;
 }
-.logo{
-    font-size:24px;
-    font-weight:bold;
-    color: #ff4757;
-    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--primary-color);
+    cursor: pointer;
 }
-#search{
-    flex:1;
-    padding:10px;
-    border:1px solid #333;
-    border-radius:5px;
-    background: #2f2f2f;
-    color: #fff;
+#search {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background: var(--input-bg);
+    color: var(--text-color);
 }
-#search:focus {
-    outline: 1px solid #ff4757;
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-.container{
-    width:95%;
-    max-width: 1200px;
-    margin:auto;
-    padding:20px;
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-color);
 }
-.upload{
-    background:#1f1f1f;
-    padding:20px;
-    border-radius:10px;
-    margin-bottom:30px;
-    border: 1px solid #2f2f2f;
+.container {
+    width: 95%;
+    max-width: 1300px;
+    margin: auto;
+    padding: 20px;
 }
-.upload h2 {
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+.box-panel {
+    background: var(--panel-bg);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color);
+}
+.box-panel h2, .box-panel h3 {
     margin-top: 0;
-    color: #ff4757;
+    color: var(--primary-color);
 }
-.upload input[type="text"] {
+input, textarea, select {
     width: 100%;
     padding: 10px;
-    background: #2f2f2f;
-    border: 1px solid #333;
-    color: white;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     border-radius: 5px;
     box-sizing: border-box;
+    margin-bottom: 12px;
 }
-.upload input[type="file"] {
-    margin-top: 10px;
-}
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:25px;
-}
-.card{
-    background:#1f1f1f;
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 4px 15px rgba(0,0,0,.5);
-    border: 1px solid #2f2f2f;
-    display: flex;
-    flex-direction: column;
-}
-.card video{
-    width:100%;
-    aspect-ratio: 16/9;
-    background:black;
-}
-.info{
-    padding:15px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-.info h3 {
-    margin: 0 0 10px 0;
-    font-size: 18px;
-}
-.stats {
-    font-size: 14px;
-    color: #aaa;
-    margin-bottom: 10px;
-}
-button{
-    cursor:pointer;
-    padding:8px 12px;
+button.main-btn {
+    cursor: pointer;
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
-    background: #ff4757;
+    background: var(--primary-color);
     color: white;
     font-weight: bold;
-    transition: 0.2s;
 }
-button:hover {
-    background: #ff6b81;
+button.main-btn:hover { background: var(--primary-hover); }
+button:disabled { background: #555 !important; cursor: not-allowed; }
+
+/* VİDEO GRID */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
-button:disabled {
-    background: #555;
-    cursor: not-allowed;
+.video-card {
+    background: var(--panel-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
 }
-.likeBtn {
+.thumbnail-placeholder {
     width: 100%;
-    margin-bottom: 10px;
-}
-.comment-section {
-    margin-top: auto;
-}
-.comment-input-container {
+    aspect-ratio: 16/9;
+    background: #000;
     display: flex;
-    gap: 5px;
-    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 30px;
 }
-.comment{
-    flex: 1;
-    padding:8px;
-    background: #2f2f2f;
-    border: 1px solid #333;
-    color: white;
-    border-radius:5px;
+.card-info { padding: 12px; display: flex; gap: 10px; align-items: center; }
+.card-text { flex: 1; }
+.card-info h4 { margin: 0 0 4px 0; font-size: 15px; }
+.card-meta { font-size: 12px; color: var(--text-sub); }
+
+/* DETAYLI İZLEME DÜZENİ */
+.watch-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
 }
-.comments{
-    max-height: 100px;
-    overflow-y:auto;
-    margin-top: 10px;
-    background: #151515;
-    border-radius: 5px;
-    padding: 5px;
+@media (max-width: 900px) {
+    .watch-layout { grid-template-columns: 1fr; }
 }
-.comments p{
-    background:#2f2f2f;
-    padding:8px;
-    border-radius:5px;
-    margin: 5px 0;
-    font-size: 13px;
-    word-break: break-all;
+.main-video-side video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 8px;
 }
-hr {
-    border: 0;
-    border-top: 1px solid #333;
+.video-details { margin-top: 15px; }
+.channel-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin: 15px 0;
 }
+.avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--border-color);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    overflow: hidden;
+}
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.comment-box {
+    margin-top: 20px;
+    background: var(--panel-bg);
+    padding: 15px;
+    border-radius: 8px;
+}
+.comment-list p {
+    background: var(--input-bg);
+    padding: 10px;
+    border-radius: 5px;
+    margin: 8px 0;
+}
+
+/* GÖNDERİ DÜZENİ */
+.post-card {
+    background: var(--panel-bg);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+/* MODALLAR */
+.modal-overlay {
+    position: fixed; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
+    z-index: 2000;
+}
+.modal-content {
+    background: var(--panel-bg); padding: 25px; border-radius: 10px;
+    width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto;
+}
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo">📺 Basur.İzle</div>
-<input id="search" placeholder="Video veya başlık ara...">
+    <div class="logo" onclick="showSection('home')">📺 Basur.İzle</div>
+    <input id="search" placeholder="Ara / Search...">
+    <div class="nav-buttons">
+        <button class="icon-btn" onclick="toggleSettingsModal()">⚙️</button>
+        <button class="main-btn" id="headerChannelBtn" onclick="openMyChannel()">Kanalım</button>
+        <span id="headerUser"></span>
+    </div>
 </header>
 
 <div class="container">
+    <!-- ANA SAYFA (HOME) -->
+    <div id="sec-home">
+        <div class="tabs">
+            <button class="tab-btn active" id="tabVideo" onclick="switchHomeTab('video')">Videolar</button>
+            <button class="tab-btn" id="tabPost" onclick="switchHomeTab('post')">Gönderiler</button>
+        </div>
+        <div id="home-videos-wrapper" class="video-grid"></div>
+        <div id="home-posts-wrapper" class="hidden"></div>
+    </div>
 
-<div class="upload">
-<h2>Yeni Video Paylaş</h2>
-<input type="text" id="title" placeholder="Video başlığı girin...">
-<br><br>
-<input type="file" id="videoFile" accept="video/*">
-<br><br>
-<button onclick="uploadVideo()">Videoyu Sunucuya Yükle</button>
-</div>
-
-<div class="grid" id="videos"></div>
-
-</div>
-
-<script>
-const videosDiv = document.getElementById("videos");
-// Hafızadaki videoları çek, yoksa boş dizi oluştur
-let savedVideos = JSON.parse(localStorage.getItem("basur_videos")) || [];
-
-// Sayfa ilk açıldığında kayıtlı videoları ekrana bas
-window.onload = function() {
-    // Tersten döngü kuruyoruz ki en son yüklenen en üstte görünsün
-    for(let i = savedVideos.length - 1; i >= 0; i--) {
-        createVideoCard(savedVideos[i], i);
-    }
-};
-
-function uploadVideo(){
-    const title = document.getElementById("title").value.trim();
-    const file = document.getElementById("videoFile").files[0];
-
-    if(!title || !file){
-        alert("Lütfen bir başlık yazın ve video dosyası seçin.");
-        return;
-    }
-
-    // Büyük boyutlu videolar yerel hafıza sınırını (5-10MB) aşabilir uyarısı
-    if (file.size > 25 * 1024 * 1024) {
-        alert("Video boyutu çok büyük! Tarayıcı hafızası için lütfen 25MB altı bir video seçin.");
-        return;
-    }
-
-    const reader = new FileReader();
-    
-    // Videoyu kalıcı veri tabanına yazmak için Base64'e çeviriyoruz
-    reader.onload = function(e) {
-        const videoData = {
-            id: Date.now(),
-            title: title,
-            src: e.target.result, // Kalıcı veri formatı
-            views: 0,
-            likes: 0,
-            comments: []
-        };
-
-        savedVideos.push(videoData);
-        localStorage.setItem("basur_videos", JSON.stringify(savedVideos));
-        
-        // Ekrana kartı ekle (Index numarası dizinin son elemanıdır)
-        createVideoCard(videoData, savedVideos.length - 1);
-        
-        // Formu temizle
-        document.getElementById("title").value = "";
-        document.getElementById("videoFile").value = "";
-    };
-
-    reader.readAsDataURL(file);
-}
-
-function createVideoCard(videoData, index) {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.dataset.index = index;
-
-    card.innerHTML = `
-        <video controls preload="metadata" playsinline>
-            <source src="${videoData.src}">
-            Tarayıcınız bu videoyu desteklemiyor.
-        </video>
-
-        <div class="info">
-            <h3>${videoData.title}</h3>
-            <div class="stats">
-                👁️ <span class="view">${videoData.views}</span> izlenme
-                | 
-                👍 <span class="likes">${videoData.likes}</span> beğeni
-            </div>
-
-            <button class="likeBtn">👍 Beğen</button>
-            <hr>
-
-            <div class="comment-section">
-                <div class="comments"></div>
-                <div class="comment-input-container">
-                    <input class="comment" placeholder="Yorum ekle...">
-                    <button class="sendBtn">Gönder</button>
+    <!-- VİDEO İZLEME SAYFASI (WATCH) -->
+    <div id="sec-watch" class="watch-layout hidden">
+        <div class="main-video-side">
+            <video id="player" controls autoplay playsinline></video>
+            <div class="video-details">
+                <h2 id="wTitle">Video Başlığı</h2>
+                <div class="channel-row">
+                    <div class="avatar" id="wAvatar"></div>
+                    <div style="flex:1">
+                        <strong id="wUploader">Kanal Adı</strong>
+                        <div id="wHype" style="font-size:12px; color:var(--text-sub)">Puan: 0 | Aboneler: 0</div>
+                    </div>
+                    <button class="main-btn" id="wSubBtn" onclick="toggleSubscribe()">Abone Ol</button>
+                </div>
+                <div style="background:var(--panel-bg); padding:12px; border-radius:6px; font-size:14px">
+                    <div style="font-weight:bold; margin-bottom:5px">
+                        👁️ <span id="wViews">0</span> | 📅 <span id="wDate">01.01.2026</span>
+                    </div>
+                    <p id="wDesc" style="margin:0; color:var(--text-sub)">Açıklama</p>
+                </div>
+                <div style="margin-top:10px">
+                    <button class="main-btn" id="wLikeBtn" onclick="likeVideo()">👍 Beğen (<span id="wLikes">0</span>)</button>
+                </div>
+                
+                <div class="comment-box">
+                    <h3 id="lblCommentsTitle">Yorumlar</h3>
+                    <div style="display:flex; gap:10px">
+                        <input id="txtComment" placeholder="Yorum yaz...">
+                        <button class="main-btn" onclick="addComment()">Gönder</button>
+                    </div>
+                    <div class="comment-list" id="wComments"></div>
                 </div>
             </div>
         </div>
-    `;
+        <div id="watch-sidebar" class="video-grid" style="grid-template-columns: 1fr;"></div>
+    </div>
 
-    // Eski yorumları karta yükle
-    const commentsDiv = card.querySelector(".comments");
-    videoData.comments.forEach(text => {
-        const p = document.createElement("p");
-        p.textContent = text;
-        commentsDiv.appendChild(p);
-    });
-
-    videosDiv.appendChild(card);
-
-    // İzlenme Olayı
-    const video = card.querySelector("video");
-    let viewed = false;
-    video.addEventListener("play", () => {
-        if (!viewed) {
-            videoData.views += 1;
-            card.querySelector(".view").textContent = videoData.views;
-            updateLocalStorage();
-            viewed = true;
-        }
-    });
-
-    // Beğenme Olayı
-    const likeBtn = card.querySelector(".likeBtn");
-    likeBtn.addEventListener("click", () => {
-        videoData.likes += 1;
-        card.querySelector(".likes").textContent = videoData.likes;
-        likeBtn.innerText = "✅ Beğenildi";
-        likeBtn.disabled = true;
-        updateLocalStorage();
-    });
-
-    // Yorum Yapma Olayı
-    const commentInput = card.querySelector(".comment");
-    card.querySelector(".sendBtn").addEventListener("click", () => {
-        const text = commentInput.value.trim();
-        if (text === "") return;
-
-        videoData.comments.push(text);
+    <!-- KANALIM / STÜDYO (CHANNEL) -->
+    <div id="sec-channel" class="hidden">
+        <div class="box-panel" style="display:flex; align-items:center; gap:20px">
+            <div class="avatar" id="chanAvatar" style="width:70px; height:70px; font-size:30px"></div>
+            <div>
+                <h2 id="chanName" style="margin:0">Kanalım</h2>
+                <p id="chanStats" style="margin:5px 0 0 0; color:var(--text-sub)">Puan: 0 | Aboneler: 0</p>
+                <div style="margin-top: 8px;">
+                    <label style="font-size: 12px; color: var(--primary-color); cursor:pointer; font-weight:bold;">
+                        📷 Profil Resmini Değiştir
+                        <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload()">
+                    </label>
+                </div>
+            </div>
+        </div>
         
-        const p = document.createElement("p");
-        p.textContent = text;
-        commentsDiv.appendChild(p);
+        <div class="tabs">
+            <button class="tab-btn active" id="cTabManage" onclick="switchChannelTab('manage')">İçerik Yönetimi & Yükleme</button>
+            <button class="tab-btn" id="cTabPost" onclick="switchChannelTab('post')">Gönderi Paylaş</button>
+        </div>
+
+        <div id="chan-manage-wrapper">
+            <div class="box-panel">
+                <h3 id="lblUploadVideo">Yeni Video Yükle</h3>
+                <input type="text" id="upTitle" placeholder="Video Başlığı">
+                <textarea id="upDesc" placeholder="Video Açıklaması" rows="2"></textarea>
+                <input type="file" id="upFile" accept="video/*">
+                <button class="main-btn" onclick="handleVideoUpload()">Videoyu Platforma Yükle</button>
+            </div>
+            <h3>Videolarım</h3>
+            <div id="my-videos-list"></div>
+        </div>
+
+        <div id="chan-post-wrapper" class="hidden">
+            <div class="box-panel">
+                <h3 id="lblCreatePost">Yeni Gönderi Oluştur</h3>
+                <textarea id="postContent" placeholder="Ne düşünüyorsun?" rows="3"></textarea>
+                <button class="main-btn" onclick="handleCreatePost()">Paylaş</button>
+            </div>
+            <h3>Gönderilerim</h3>
+            <div id="my-posts-list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- GİRİŞ / KAYIT MODAL -->
+<div id="authModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h2 id="lblAuthTitle">Giriş Yap / Kayıt Ol</h2>
+        <input type="text" id="authUser" placeholder="Kullanıcı Adı">
+        <input type="text" id="authEmail" placeholder="E-posta Adresi">
+        <input type="password" id="authPass" placeholder="Şifre">
+        <button class="main-btn" style="width:100%" onclick="handleAuth()">Devam Et</button>
+    </div>
+</div>
+
+<!-- AYARLAR MODAL -->
+<div id="settingsModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h2 id="lblSettingsTitle">Ayarlar</h2>
+        <label id="lblLang">Dil / Language</label>
+        <select id="setLang" onchange="changeLanguage(this.value)">
+            <option value="tr">Türkçe</option>
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+            <option value="pt">Português (Portugal)</option>
+            <option value="br">Português (Brasil)</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+        </select>
+        <label id="lblTheme">Tema</label>
+        <select id="setTheme" onchange="changeTheme(this.value)">
+            <option value="dark">Koyu Mod</option>
+            <option value="light">Açık Mod</option>
+        </select>
+        <hr style="border:0; border-top:1px solid var(--border-color); margin:15px 0">
+        <h3 id="lblAccountUpdate">Hesap Bilgilerini Güncelle</h3>
+        <input type="text" id="setNewName" placeholder="Yeni Kullanıcı Adı">
+        <input type="password" id="setNewPass" placeholder="Yeni Şifre">
+        <button class="main-btn" style="margin-bottom:10px" onclick="requestSecurityCode()">Şifre Al</button>
+        <input type="password" id="securityCodeInput" placeholder="Kurtarma Şifresini Girin">
+        <button class="main-btn" onclick="applyAccountChanges()">Değişiklikleri Kaydet</button>
+        <hr style="border:0; border-top:1px solid var(--border-color); margin:15px 0">
+        <button class="main-btn" style="background:#555; width:100%; margin-bottom:10px" onclick="toggleSettingsModal()">Kapat</button>
+        <button class="main-btn" style="background:#d63031; width:100%" onclick="logOut()">Çıkış Yap</button>
+    </div>
+</div>
+
+<script>
+const langPack = {
+    tr: { search:"Ara...", myChan:"Kanalım", views:"izlenme", likes:"beğeni", sub:"Abone Ol", subbed:"Abone Olundu", comms:"Yorumlar", send:"Gönder", upload:"Yeni Video Yükle", post:"Yeni Gönderi Oluştur", title:"Başlık", desc:"Açıklama", share:"Paylaş", settings:"Ayarlar", lang:"Dil", theme:"Tema", save:"Kaydet", close:"Kapat", logout:"Çıkış Yap" },
+    en: { search:"Search...", myChan:"My Channel", views:"views", likes:"likes", sub:"Subscribe", subbed:"Subscribed", comms:"Comments", send:"Send", upload:"Upload Video", post:"Create Post", title:"Title", desc:"Description", share:"Post", settings:"Settings", lang:"Language", theme:"Theme", save:"Save", close:"Close", logout:"Log Out" },
+    ru: { search:"Поиск...", myChan:"Мой канал", views:"просмотров", likes:"лайков", sub:"Подписаться", subbed:"Вы подписаны", comms:"Комментарии", send:"Отправить", upload:"Загрузить видео", post:"Создать пост", title:"Название", desc:"Описание", share:"Поделиться", settings:"Настройки", lang:"Язык", theme:"Тема", save:"Сохранить", close:"Закрыть", logout:"Выйти" },
+    pt: { search:"Pesquisar...", myChan:"Meu Canal", views:"visualizações", likes:"gostos", sub:"Subscrever", subbed:"Subscrito", comms:"Comentários", send:"Enviar", upload:"Enviar Vídeo", post:"Criar Publicação", title:"Título", desc:"Descrição", share:"Publicar", settings:"Definições", lang:"Idioma", theme:"Tema", save:"Guardar", close:"Fechar", logout:"Sair" },
+    br: { search:"Pesquisar...", myChan:"Meu Canal", views:"visualizações", likes:"curtidas", sub:"Inscrever-se", subbed:"Inscrito", comms:"Comentários", send:"Enviar", upload:"Enviar Vídeo", post:"Criar Postagem", title:"Título", desc:"Descrição", share:"Postar", settings:"Configurações", lang:"Idioma", theme:"Tema", save:"Salvar", close:"Fechar", logout:"Sair" },
+    de: { search:"Suche...", myChan:"Mein Kanal", views:"Aufrufe", likes:"Likes", sub:"Abonnieren", subbed:"Abonniert", comms:"Kommentare", send:"Senden", upload:"Video hochladen", post:"Beitrag erstellen", title:"Titel", desc:"Beschreibung", share:"Teilen", settings:"Einstellungen", lang:"Sprache", theme:"Design", save:"Speichern", close:"Schließen", logout:"Abmelden" },
+    fr: { search:"Rechercher...", myChan:"Ma Chaîne", views:"vues", likes:"j'aime", sub:"S'abonner", subbed:"Abonné", comms:"Commentaires", send:"Envoyer", upload:"Mettre en ligne", post:"Créer un post", title:"Titre", desc:"Description", share:"Publier", settings:"Paramètres", lang:"Langue", theme:"Thème", save:"Enregistrer", close:"Fermer", logout:"Déconnexion" }
+};
+
+let currentLang = "tr";
+
+let db = JSON.parse(localStorage.getItem("basur_v5_data")) || {
+    users: {},     // username: {pass, email, subs:[], points:0, avatar:""}
+    stats: {},     // vId: {views, likes, comments:[], title, desc, uploader, date, fileName}
+    posts: []      // {id, uploader, content, date}
+};
+
+let currentUser = localStorage.getItem("basur_v5_current") || null;
+let currentWatchId = null;
+let sessionBlobs = {};
+
+window.onload = function() {
+    if(!currentUser) {
+        document.getElementById("authModal").classList.remove("hidden");
+    } else {
+        initApp();
+    }
+};
+
+function initApp() {
+    document.getElementById("authModal").classList.add("hidden");
+    document.getElementById("headerUser").innerText = "👤 " + currentUser;
+    applyLanguage();
+    renderHome();
+}
+
+function handleAuth() {
+    let u = document.getElementById("authUser").value.trim();
+    let em = document.getElementById("authEmail").value.trim();
+    let p = document.getElementById("authPass").value.trim();
+    if(!u || !p || !em) return alert("Tüm alanları doldur!");
+
+    if(!db.users[u]) {
+        db.users[u] = { pass: p, email: em, subs: [], points: 0, avatar: "" };
+        saveDB();
+    } else {
+        if(db.users[u].pass !== p) return alert("Hatalı şifre!");
+    }
+    currentUser = u;
+    localStorage.setItem("basur_v5_current", u);
+    initApp();
+}
+
+function saveDB() {
+    localStorage.setItem("basur_v5_data", JSON.stringify(db));
+}
+
+function logOut() {
+    localStorage.removeItem("basur_v5_current");
+    location.reload();
+}
+
+function showSection(sec) {
+    document.getElementById("sec-home").classList.add("hidden");
+    document.getElementById("sec-watch").classList.add("hidden");
+    document.getElementById("sec-channel").classList.add("hidden");
+    
+    if(sec === 'home') {
+        document.getElementById("sec-home").classList.remove("hidden");
+        renderHome();
+    } else if(sec === 'watch') {
+        document.getElementById("sec-watch").classList.remove("hidden");
+    } else if(sec === 'channel') {
+        document.getElementById("sec-channel").classList.remove("hidden");
+    }
+}
+
+function switchHomeTab(type) {
+    document.getElementById("tabVideo").classList.toggle("active", type==='video');
+    document.getElementById("tabPost").classList.toggle("active", type==='post');
+    document.getElementById("home-videos-wrapper").classList.toggle("hidden", type!=='video');
+    document.getElementById("home-posts-wrapper").classList.toggle("hidden", type!=='post');
+}
+
+function switchChannelTab(type) {
+    document.getElementById("cTabManage").classList.toggle("active", type==='manage');
+    document.getElementById("cTabPost").classList.toggle("active", type==='post');
+    document.getElementById("chan-manage-wrapper").classList.toggle("hidden", type!=='manage');
+    document.getElementById("chan-post-wrapper").classList.toggle("hidden", type!=='post');
+}
+
+function getNowDate() {
+    let d = new Date();
+    return (d.getDate()<10?'0':'')+d.getDate()+"."+((d.getMonth()+1)<10?'0':'')+(d.getMonth()+1)+"."+d.getFullYear();
+}
+
+// PROFİL RESMİ YÜKLEME VE SAKLAMA
+function handleAvatarUpload() {
+    let file = document.getElementById("avatarFileInput").files[0];
+    if(!file) return;
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        db.users[currentUser].avatar = e.target.result; // Resmi Base64 formatında saklarız
+        saveDB();
+        drawAvatar(document.getElementById("chanAvatar"), currentUser);
+        alert("Profil fotoğrafın başarıyla güncellendi!");
+    };
+    reader.readAsDataURL(file);
+}
+
+// AVATAR ÇİZİCİ (FOTO VARSA FOTO, YOKSA İSMİN BAŞ HARFİ)
+function drawAvatar(element, username) {
+    if(!element) return;
+    element.innerHTML = "";
+    let uData = db.users[username];
+    if(uData && uData.avatar) {
+        element.innerHTML = `<img src="${uData.avatar}" alt="avatar">`;
+    } else {
+        element.innerText = username ? username[0].toUpperCase() : "?";
+    }
+}
+
+// ABONE SAYISI BULUCU
+function getSubscriberCount(username) {
+    let count = 0;
+    Object.keys(db.users).forEach(k => {
+        if(db.users[k].subs && db.users[k].subs.includes(username)) count++;
+    });
+    return count;
+}
+
+function handleVideoUpload() {
+    let title = document.getElementById("upTitle").value.trim();
+    let desc = document.getElementById("upDesc").value.trim();
+    let file = document.getElementById("upFile").files[0];
+    if(!title || !file) return alert("Başlık ve Video dosyası zorunlu!");
+
+    let vId = "vid_" + Date.now();
+    sessionBlobs[vId] = URL.createObjectURL(file);
+
+    db.stats[vId] = {
+        views: 0, likes: 0, comments: [],
+        title: title, desc: desc, uploader: currentUser,
+        date: getNowDate(), fileName: file.name
+    };
+    saveDB();
+    
+    document.getElementById("upTitle").value = "";
+    document.getElementById("upDesc").value = "";
+    document.getElementById("upFile").value = "";
+    
+    openMyChannel();
+}
+
+function handleCreatePost() {
+    let content = document.getElementById("postContent").value.trim();
+    if(!content) return;
+
+    db.posts.push({
+        id: "post_" + Date.now(),
+        uploader: currentUser,
+        content: content,
+        date: getNowDate()
+    });
+    saveDB();
+    document.getElementById("postContent").value = "";
+    openMyChannel();
+}
+
+function renderHome() {
+    let vWrap = document.getElementById("home-videos-wrapper");
+    let pWrap = document.getElementById("home-posts-wrapper");
+    vWrap.innerHTML = ""; pWrap.innerHTML = "";
+
+    Object.keys(db.stats).reverse().forEach(vId => {
+        let v = db.stats[vId];
+        let card = document.createElement("div");
+        card.className = "video-card";
+        card.onclick = () => openWatch(vId);
         
-        commentInput.value = "";
-        updateLocalStorage();
-        commentsDiv.scrollTop = commentsDiv.scrollHeight; // Son yoruma odaklan
+        card.innerHTML = `
+            <div class="thumbnail-placeholder">▶</div>
+            <div class="card-info">
+                <div class="avatar" style="width:35px; height:35px; font-size:14px;" data-user="${v.uploader}"></div>
+                <div class="card-text">
+                    <h4>${v.title}</h4>
+                    <div class="card-meta">👤 ${v.uploader}</div>
+                    <div class="card-meta">👁️ ${v.views} ${langPack[currentLang].views}</div>
+                </div>
+            </div>
+        `;
+        vWrap.appendChild(card);
+        drawAvatar(card.querySelector("[data-user]"), v.uploader);
+    });
+
+    [...db.posts].reverse().forEach(p => {
+        let card = document.createElement("div");
+        card.className = "post-card";
+        card.innerHTML = `
+            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px">
+                <div class="avatar" style="width:30px; height:30px; font-size:12px;" data-puser="${p.uploader}"></div>
+                <strong>${p.uploader}</strong>
+                <span style="font-size:12px; color:var(--text-sub)">📅 ${p.date}</span>
+            </div>
+            <p style="margin:0; font-size:15px; word-break:break-all">${p.content}</p>
+        `;
+        pWrap.appendChild(card);
+        drawAvatar(card.querySelector("[data-puser]"), p.uploader);
     });
 }
 
-function updateLocalStorage() {
-    localStorage.setItem("basur_videos", JSON.stringify(savedVideos));
+function openWatch(vId) {
+    currentWatchId = vId;
+    let v = db.stats[vId];
+    showSection('watch');
+
+    let player = document.getElementById("player");
+    if(sessionBlobs[vId]) {
+        player.src = sessionBlobs[vId];
+        player.style.display = "block";
+    } else {
+        player.removeAttribute("src");
+        player.style.display = "none";
+        alert("Güvenlik protokolü: Bu videoyu izlemek için kanal stüdyonuzdan tekrar göstermelisiniz: " + v.fileName);
+    }
+
+    v.views += 1;
+    if(db.users[v.uploader]) {
+        db.users[v.uploader].points += 1;
+    }
+    saveDB();
+
+    document.getElementById("wTitle").innerText = v.title;
+    document.getElementById("wUploader").innerText = v.uploader;
+    drawAvatar(document.getElementById("wAvatar"), v.uploader);
+    document.getElementById("wViews").innerText = v.views + " " + langPack[currentLang].views;
+    document.getElementById("wDate").innerText = v.date;
+    document.getElementById("wDesc").innerText = v.desc || "";
+    document.getElementById("wLikes").innerText = v.likes;
+    
+    updateWatchSubAndPoints();
+
+    let subBtn = document.getElementById("wSubBtn");
+    if(v.uploader === currentUser) {
+        subBtn.style.display = "none";
+    } else {
+        subBtn.style.display = "block";
+        let isSubbed = db.users[currentUser]?.subs?.includes(v.uploader);
+        subBtn.innerText = isSubbed ? langPack[currentLang].subbed : langPack[currentLang].sub;
+    }
+
+    renderComments();
+    renderSidebar(vId);
 }
 
-// Arama Filtresi
+function updateWatchSubAndPoints() {
+    let v = db.stats[currentWatchId];
+    let subCount = getSubscriberCount(v.uploader);
+    document.getElementById("wHype").innerText = `Puan: ${db.users[v.uploader]?.points || 0} | Aboneler: ${subCount}`;
+}
+
+function renderComments() {
+    let div = document.getElementById("wComments");
+    div.innerHTML = "";
+    let v = db.stats[currentWatchId];
+    if(!v.comments) v.comments = [];
+    v.comments.forEach(c => {
+        let p = document.createElement("p");
+        p.innerHTML = `<strong>${c.author}:</strong> ${c.text}`;
+        div.appendChild(p);
+    });
+}
+
+function addComment() {
+    let txt = document.getElementById("txtComment").value.trim();
+    if(!txt) return;
+    db.stats[currentWatchId].comments.push({ author: currentUser, text: txt });
+    saveDB();
+    document.getElementById("txtComment").value = "";
+    renderComments();
+}
+
+function likeVideo() {
+    db.stats[currentWatchId].likes += 1;
+    saveDB();
+    document.getElementById("wLikes").innerText = db.stats[currentWatchId].likes;
+}
+
+function toggleSubscribe() {
+    let uploader = db.stats[currentWatchId].uploader;
+    if(!db.users[currentUser].subs) db.users[currentUser].subs = [];
+    let mySubs = db.users[currentUser].subs;
+
+    if(mySubs.includes(uploader)) {
+        db.users[currentUser].subs = mySubs.filter(x => x !== uploader);
+    } else {
+        db.users[currentUser].subs.push(uploader);
+    }
+    saveDB();
+    
+    let isSubbed = db.users[currentUser].subs.includes(uploader);
+    document.getElementById("wSubBtn").innerText = isSubbed ? langPack[currentLang].subbed : langPack[currentLang].sub;
+    updateWatchSubAndPoints();
+}
+
+function renderSidebar(excludeId) {
+    let sb = document.getElementById("watch-sidebar");
+    sb.innerHTML = "";
+    Object.keys(db.stats).forEach(vId => {
+        if(vId === excludeId) return;
+        let v = db.stats[vId];
+        let card = document.createElement("div");
+        card.className = "video-card";
+        card.onclick = () => openWatch(vId);
+        card.innerHTML = `
+            <div class="thumbnail-placeholder" style="font-size:18px">▶</div>
+            <div class="card-info">
+                <h4 style="font-size:14px">${v.title}</h4>
+                <div class="card-meta">👤 ${v.uploader}</div>
+            </div>
+        `;
+        sb.appendChild(card);
+    });
+}
+
+function openMyChannel() {
+    showSection('channel');
+    let uData = db.users[currentUser] || {points:0, subs:[]};
+    document.getElementById("chanName").innerText = currentUser;
+    drawAvatar(document.getElementById("chanAvatar"), currentUser);
+    
+    let subCount = getSubscriberCount(currentUser);
+    document.getElementById("chanStats").innerText = `Kanal Puanı: ${uData.points || 0} | Aboneler: ${subCount}`;
+
+    let vList = document.getElementById("my-videos-list");
+    vList.innerHTML = "";
+    Object.keys(db.stats).forEach(vId => {
+        let v = db.stats[vId];
+        if(v.uploader !== currentUser) return;
+        
+        let row = document.createElement("div");
+        row.className = "box-panel";
+        row.innerHTML = `
+            <div><strong>Dosya Eşleşmesi:</strong> ${v.fileName} ${sessionBlobs[vId] ? '✅ Bağlı' : '❌ Dosya Seçilmeli'}</div>
+            <input type="file" onchange="relinkFile(this, '${vId}')" accept="video/*">
+            <input type="text" value="${v.title}" id="editT_${vId}" placeholder="Başlık Düzenle">
+            <textarea id="editD_${vId}" placeholder="Açıklama Düzenle">${v.desc || ''}</textarea>
+            <div style="display:flex; gap:10px">
+                <button class="main-btn" onclick="updateVideoData('${vId}')">Güncelle</button>
+                <button class="main-btn" style="background:#d63031" onclick="deleteVideo('${vId}')">Sil</button>
+            </div>
+        `;
+        vList.appendChild(row);
+    });
+
+    let pList = document.getElementById("my-posts-list");
+    pList.innerHTML = "";
+    db.posts.forEach((p, idx) => {
+        if(p.uploader !== currentUser) return;
+        let row = document.createElement("div");
+        row.className = "post-card";
+        row.innerHTML = `
+            <p>${p.content}</p>
+            <button class="main-btn" style="background:#d63031; padding:4px 8px; font-size:12px" onclick="deletePost(${idx})">Sil</button>
+        `;
+        pList.appendChild(row);
+    });
+}
+
+function relinkFile(input, vId) {
+    if(input.files[0]) {
+        sessionBlobs[vId] = URL.createObjectURL(input.files[0]);
+        alert("Video dosyası başarıyla bağlandı!");
+        openMyChannel();
+    }
+}
+
+function updateVideoData(vId) {
+    let t = document.getElementById("editT_" + vId).value.trim();
+    let d = document.getElementById("editD_" + vId).value.trim();
+    if(!t) return;
+    db.stats[vId].title = t;
+    db.stats[vId].desc = d;
+    saveDB();
+    alert("Video güncellendi!");
+    openMyChannel();
+}
+
+function deleteVideo(vId) {
+    delete db.stats[vId];
+    if(sessionBlobs[vId]) delete sessionBlobs[vId];
+    saveDB();
+    openMyChannel();
+}
+
+function deletePost(idx) {
+    db.posts.splice(idx, 1);
+    saveDB();
+    openMyChannel();
+}
+
+function toggleSettingsModal() {
+    document.getElementById("settingsModal").classList.toggle("hidden");
+}
+
+function changeTheme(mode) {
+    if(mode === 'light') document.body.classList.add("light-mode");
+    else document.body.classList.remove("light-mode");
+}
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    applyLanguage();
+}
+
+function applyLanguage() {
+    let p = langPack[currentLang];
+    document.getElementById("search").placeholder = p.search;
+    document.getElementById("headerChannelBtn").innerText = p.myChan;
+}
+
+function requestSecurityCode() {
+    let userMail = db.users[currentUser]?.email || "eposta@test.com";
+    alert(`📧 E-posta Gönderildi (${userMail}):\n\nDeğerli kullanıcım, işte şifreni değiştirmen veya adını değiştirmen için şifre. Bu şifre hiç değişmeyecek yani her zaman bu şifre ile adını veya şifreni değiştireceksin. İşte şifre: oramakomaburamako`);
+}
+
+function applyAccountChanges() {
+    let code = document.getElementById("securityCodeInput").value.trim();
+    if(code !== "oramakomaburamako") {
+        return alert("Hatalı Güvenlik Şifresi! Değişiklik engellendi.");
+    }
+
+    let newName = document.getElementById("setNewName").value.trim();
+    let newPass = document.getElementById("setNewPass").value.trim();
+
+    if(newName && newName !== currentUser) {
+        if(db.users[newName]) return alert("Bu kullanıcı adı zaten alınmış!");
+        db.users[newName] = db.users[currentUser];
+        delete db.users[currentUser];
+        
+        Object.keys(db.stats).forEach(vId => {
+            if(db.stats[vId].uploader === currentUser) db.stats[vId].uploader = newName;
+        });
+        db.posts.forEach(p => {
+            if(p.uploader === currentUser) p.uploader = newName;
+        });
+
+        currentUser = newName;
+        localStorage.setItem("basur_v5_current", newName);
+    }
+
+    if(newPass) {
+        db.users[currentUser].pass = newPass;
+    }
+
+    saveDB();
+    alert("Hesap bilgileri başarıyla güncellendi!");
+    document.getElementById("securityCodeInput").value = "";
+    toggleSettingsModal();
+    initApp();
+}
+
 document.getElementById("search").addEventListener("input", function() {
-    const q = this.value.toLowerCase();
-    document.querySelectorAll(".card").forEach(card => {
-        const title = card.querySelector("h3").textContent.toLowerCase();
-        card.style.display = title.includes(q) ? "flex" : "none";
+    let q = this.value.toLowerCase();
+    document.querySelectorAll(".video-card").forEach(card => {
+        let title = card.querySelector("h4").textContent.toLowerCase();
+        card.style.display = title.includes(q) ? "block" : "none";
     });
 });
 </script>
-
 </body>
 </html>
